@@ -1,0 +1,36 @@
+#! /usr/bin/env ruby
+
+#
+#------------------------------------------------------------------------------
+# "THE BEER-WARE LICENSE" (Revision 42):
+# <mayeu.tik@gmail.com> wrote this file. As long as you retain this notice you
+# can do whatever you want with this stuff. If we meet some day, and you think
+# this stuff is worth it, you can buy me a beer in return. Matthieu Maury
+#------------------------------------------------------------------------------
+#
+
+require 'csv'
+require 'graphviz'
+require 'trollop'
+
+VERSION = '0.0.1'
+
+opts = Trollop::options do
+  version VERSION
+  banner <<-EOS
+Iscoco is a command line utility to graph neural connection of C. Elegans.
+    iscoco [-hv] [--out filename] Neuron ...
+
+You can filter connections that start from or to specific neurons/class.
+  EOS
+  opt :out, "Filename to print the output", :type => :string, :short => '-o'
+end
+
+p opts # a hash: { :monkey => false, :goat => true, :num_limbs => 4, :num_thumbs => nil }
+p ARGV
+
+CSV.foreach("Chen_Hall_Chklovskii_2006.csv") do |row|
+  if ARGV.index{|x| row[0].match '^'+x}
+    p row
+  end
+end
